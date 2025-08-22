@@ -21,6 +21,10 @@ def create_app():
     
     # Setup i18n
     from app.services.i18n import t, I18nService
+    
+    # Force load translations on startup
+    I18nService.load_translations()
+    
     app.jinja_env.globals.update(t=t)
     app.jinja_env.globals.update(get_current_language=I18nService.get_current_language)
     app.jinja_env.globals.update(SUPPORTED_LANGUAGES=I18nService.SUPPORTED_LANGUAGES)

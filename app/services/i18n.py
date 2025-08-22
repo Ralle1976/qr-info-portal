@@ -28,23 +28,31 @@ class I18nService:
     @classmethod
     def get_current_language(cls) -> str:
         """Get current language from session or request"""
-        # Check session first
-        if 'language' in session:
-            return session['language']
-        
-        # Check Accept-Language header
-        if request:
-            best_match = request.accept_languages.best_match(cls.SUPPORTED_LANGUAGES)
-            if best_match:
-                return best_match
+        try:
+            # Check session first
+            if hasattr(session, 'get') and session.get('language'):
+                return session['language']
+            
+            # Check Accept-Language header
+            if hasattr(request, 'accept_languages') and request.accept_languages:
+                best_match = request.accept_languages.best_match(cls.SUPPORTED_LANGUAGES)
+                if best_match:
+                    return best_match
+        except RuntimeError:
+            # Outside of request context
+            pass
         
         return cls.DEFAULT_LANGUAGE
     
     @classmethod
     def set_language(cls, language: str):
         """Set language in session"""
-        if language in cls.SUPPORTED_LANGUAGES:
-            session['language'] = language
+        try:
+            if language in cls.SUPPORTED_LANGUAGES:
+                session['language'] = language
+        except RuntimeError:
+            # Outside of request context
+            pass
     
     @classmethod
     def translate(cls, key: str, language: Optional[str] = None, **kwargs) -> str:
