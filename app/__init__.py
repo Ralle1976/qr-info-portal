@@ -9,6 +9,11 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
     
+    # Initialize database
+    from app.database import init_database
+    with app.app_context():
+        init_database()
+    
     # Register blueprints
     from app.routes_public import public_bp
     app.register_blueprint(public_bp)
