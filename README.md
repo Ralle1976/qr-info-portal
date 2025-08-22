@@ -61,6 +61,25 @@ Die Anwendung ist dann erreichbar unter:
 - Lokal: http://localhost:5000
 - Im LAN: http://[IHRE-IP]:5000
 
+## LAN-IP ermitteln
+
+**Windows:**
+```bash
+ipconfig | findstr IPv4
+```
+
+**Linux/Mac:**
+```bash
+hostname -I | awk '{print $1}'
+# oder
+ip addr show | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}' | cut -d/ -f1
+```
+
+**macOS alternativ:**
+```bash
+ipconfig getifaddr en0
+```
+
 ## Konfiguration
 
 Die Hauptkonfiguration erfolgt über `config.yml`:
