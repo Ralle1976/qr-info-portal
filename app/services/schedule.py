@@ -15,7 +15,7 @@ class ScheduleService:
         with Session(engine) as session:
             # Check for exceptions first
             exception = session.exec(
-                select(HourException).where(HourException.date == target_date)
+                select(HourException).where(HourException.exception_date == target_date)
             ).first()
             
             if exception:
@@ -91,7 +91,7 @@ class ScheduleService:
         """Get availability slots for a specific date"""
         with Session(engine) as session:
             return session.exec(
-                select(Availability).where(Availability.date == target_date)
+                select(Availability).where(Availability.availability_date == target_date)
             ).first()
     
     @staticmethod

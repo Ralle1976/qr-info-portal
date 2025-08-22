@@ -1,6 +1,7 @@
-from typing import Optional, List
+from typing import Optional, List, Any
 from datetime import datetime, date
-from sqlmodel import Field, SQLModel, JSON, Column
+from sqlmodel import Field, SQLModel, Column
+from sqlalchemy import JSON
 from enum import Enum
 
 
@@ -28,16 +29,16 @@ class StandardHours(SQLModel, table=True):
     """Standard weekly opening hours"""
     id: Optional[int] = Field(default=None, primary_key=True)
     day_of_week: int = Field(ge=0, le=6)  # 0=Monday, 6=Sunday
-    time_ranges: List[str] = Field(default=[], sa_column=Column(JSON))
+    time_ranges: List[str] = Field(default_factory=list, sa_column=Column(JSON))
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class HourException(SQLModel, table=True):
     """Exceptions to standard hours (holidays, special days)"""
     id: Optional[int] = Field(default=None, primary_key=True)
-    date: date = Field(index=True)
+    exception_date: date = Field(index=True)
     closed: bool = Field(default=False)
-    time_ranges: List[str] = Field(default=[], sa_column=Column(JSON))
+    time_ranges: List[str] = Field(default_factory=list, sa_column=Column(JSON))
     note: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -45,8 +46,8 @@ class HourException(SQLModel, table=True):
 class Availability(SQLModel, table=True):
     """Indicative availability slots"""
     id: Optional[int] = Field(default=None, primary_key=True)
-    date: date = Field(index=True)
-    time_slots: List[str] = Field(default=[], sa_column=Column(JSON))
+    availability_date: date = Field(index=True)
+    time_slots: List[str] = Field(default_factory=list, sa_column=Column(JSON))
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
@@ -64,5 +65,5 @@ class Announcement(SQLModel, table=True):
 class Settings(SQLModel, table=True):
     """General settings stored as key-value pairs"""
     key: str = Field(primary_key=True)
-    value: dict = Field(default={}, sa_column=Column(JSON))
+    value: dict = Field(default_factory=dict, sa_column=Column(JSON))
     updated_at: datetime = Field(default_factory=datetime.utcnow)
