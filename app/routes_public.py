@@ -1,10 +1,12 @@
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, Response
 from datetime import datetime, date
 from app.services import StatusService, ScheduleService, I18nService
+from app.services.qr import QRService
 from app.models import Announcement
 from app.database import engine
 from sqlmodel import Session, select
 import yaml
+import os
 
 public_bp = Blueprint('public', __name__)
 
@@ -119,3 +121,25 @@ def set_language(language):
     I18nService.set_language(language)
     # Redirect to referrer or home
     return redirect(request.referrer or url_for('public.home'))
+
+@public_bp.route('/qr')
+def qr_png():
+    """Generate QR code as PNG"""
+    # Get target URL from params or use site URL
+    target = request.args.get('target', os.getenv('SITE_URL', request.url_root))
+    
+    # Generate PNG
+    png_data = QRService.generate_qr_png(target)
+    
+    return Response(png_data, mimetype='image/png')
+
+@public_bp.route('/qr.svg')
+def qr_svg():
+    """Generate QR code as SVG"""
+    # Get target URL from params or use site URL
+    target = request.args.get('target', os.getenv('SITE_URL', request.url_root))
+    
+    # Generate SVG
+    svg_data = QRService.generate_qr_svg(target)
+    
+    return Response(svg_data, mimetype='image/svg+xml')

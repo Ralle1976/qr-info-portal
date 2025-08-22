@@ -1,7 +1,7 @@
 site:
-  name: "Labor Pattaya – Blutabnahme"
-  languages: ["de", "th", "en"]
-  default_language: "de"
+  name: "ห้องปฏิบัติการพัทยา – เจาะเลือด"
+  languages: ["th", "de", "en"]
+  default_language: "th"
   timezone: "Asia/Bangkok"
 
 location:

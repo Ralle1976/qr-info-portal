@@ -7,8 +7,8 @@ import os
 class I18nService:
     """Simple internationalization service"""
     
-    SUPPORTED_LANGUAGES = ['de', 'th', 'en']
-    DEFAULT_LANGUAGE = 'de'
+    SUPPORTED_LANGUAGES = ['th', 'de', 'en']
+    DEFAULT_LANGUAGE = 'th'
     
     translations = {}
     

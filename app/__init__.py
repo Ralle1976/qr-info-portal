@@ -14,6 +14,11 @@ def create_app():
     with app.app_context():
         init_database()
     
+    # Generate QR codes on startup
+    from app.services.qr import QRService
+    site_url = os.getenv('SITE_URL', 'http://localhost:5000')
+    QRService.save_qr_files(site_url)
+    
     # Setup i18n
     from app.services.i18n import t, I18nService
     app.jinja_env.globals.update(t=t)
