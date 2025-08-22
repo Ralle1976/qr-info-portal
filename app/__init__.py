@@ -14,6 +14,12 @@ def create_app():
     with app.app_context():
         init_database()
     
+    # Setup i18n
+    from app.services.i18n import t, I18nService
+    app.jinja_env.globals.update(t=t)
+    app.jinja_env.globals.update(get_current_language=I18nService.get_current_language)
+    app.jinja_env.globals.update(SUPPORTED_LANGUAGES=I18nService.SUPPORTED_LANGUAGES)
+    
     # Register blueprints
     from app.routes_public import public_bp
     app.register_blueprint(public_bp)
