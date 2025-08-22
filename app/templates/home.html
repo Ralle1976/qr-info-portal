@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Status Banner -->
+{% if status %}
+<div class="{% if status.type == 'ANWESEND' %}bg-green-100 border-green-400 text-green-700{% else %}bg-yellow-100 border-yellow-400 text-yellow-700{% endif %} border-l-4 p-4 mb-6 rounded-r">
+    <div class="flex items-center">
+        <div class="flex-1">
+            <p class="font-bold text-lg">
+                {{ t('status') }}: 
+                {% if status.type == 'ANWESEND' %}
+                    {{ t('open') }}
+                {% elif status.type == 'URLAUB' %}
+                    {{ t('on_vacation') }}
+                {% elif status.type == 'BILDUNGSURLAUB' %}
+                    {{ t('educational_leave') }}
+                {% elif status.type == 'KONGRESS' %}
+                    {{ t('congress') }}
+                {% else %}
+                    {{ t('other') }}
+                {% endif %}
+            </p>
+            {% if status.description %}
+                <p class="mt-1">{{ status.description }}</p>
+            {% endif %}
+            {% if status.next_return %}
+                <p class="mt-1 text-sm">{{ t('back_on') }}: {{ status.next_return.strftime('%d.%m.%Y') }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Today's Hours -->
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h2 class="text-2xl font-bold text-thai-turquoise mb-4">
+        {{ t('today') }} - {{ today.strftime('%d.%m.%Y') }}
+    </h2>
+    
+    {% if today_hours.closed %}
+        <div class="text-red-600 font-semibold text-lg">
+            {{ t('closed') }}
+        </div>
+        {% if today_hours.note %}
+            <p class="text-gray-600 mt-2">{{ today_hours.note }}</p>
+        {% endif %}
+    {% else %}
+        <div class="space-y-2">
+            {% for time_range in today_hours.time_ranges %}
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
+                    </svg>
+                    <span class="text-lg">{{ time_range }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if is_open %}
+        <div class="mt-4 inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full">
+            <div class="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            {{ t('open') }}
+        </div>
+    {% elif next_open %}
+        <div class="mt-4 text-gray-600">
+            <p>{{ t('next_available') }}: 
+                <span class="font-semibold">
+                    {{ next_open.date.strftime('%d.%m.%Y') }} - {{ next_open.time }}
+                </span>
+            </p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Announcements -->
+{% if announcements %}
+<div class="mb-6">
+    <h2 class="text-xl font-bold text-gray-700 mb-3">{{ t('announcements') }}</h2>
+    <div class="space-y-3">
+        {% for announcement in announcements %}
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r">
+            <h3 class="font-semibold text-blue-900">{{ announcement.title }}</h3>
+            <p class="text-blue-700 mt-1">{{ announcement.body }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Services -->
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 mb-3">{{ t('services') }}</h2>
+    <ul class="space-y-2">
+        {% for service in config.services.standard %}
+        <li class="flex items-center">
+            <svg class="w-5 h-5 text-thai-turquoise mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+            {{ service }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Contact & Location -->
+<div class="grid md:grid-cols-2 gap-6">
+    <!-- Contact -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold text-gray-700 mb-3">{{ t('contact') }}</h2>
+        <div class="space-y-3">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-gray-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                </svg>
+                <a href="tel:{{ config.contact.phone }}" class="text-thai-turquoise hover:underline">
+                    {{ config.contact.phone }}
+                </a>
+            </div>
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-gray-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+                <a href="mailto:{{ config.contact.email }}" class="text-thai-turquoise hover:underline">
+                    {{ config.contact.email }}
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Location -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold text-gray-700 mb-3">{{ t('address') }}</h2>
+        <p class="text-gray-600 mb-4">{{ config.location.address }}</p>
+        <a href="{{ config.location.maps_link }}" 
+           target="_blank"
+           class="inline-flex items-center px-4 py-2 bg-thai-turquoise text-white rounded hover:bg-cyan-600 transition">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+            </svg>
+            {{ t('navigate') }}
+        </a>
+    </div>
+</div>
+{% endblock %}

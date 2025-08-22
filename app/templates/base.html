@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="{{ get_current_language() }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ t('site_title') }}{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Sarabun (Thai-friendly) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sarabun': ['Sarabun', 'sans-serif'],
+                    },
+                    colors: {
+                        'thai-turquoise': '#40E0D0',
+                        'thai-coral': '#FF7F50',
+                        'thai-gold': '#FFD700',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-thai-turquoise to-cyan-500 shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-white">
+                    <a href="{{ url_for('public.home') }}">{{ t('site_title') }}</a>
+                </h1>
+                
+                <!-- Language Switcher -->
+                <div class="flex space-x-2">
+                    {% for lang in SUPPORTED_LANGUAGES %}
+                        <a href="{{ url_for('public.set_language', language=lang) }}" 
+                           class="px-3 py-1 rounded {% if lang == get_current_language() %}bg-white text-thai-turquoise{% else %}bg-thai-turquoise/20 text-white hover:bg-white/20{% endif %} transition">
+                            {{ lang.upper() }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-6 py-3">
+                <a href="{{ url_for('public.home') }}" 
+                   class="text-gray-700 hover:text-thai-turquoise transition font-medium">
+                    {{ t('today') }}
+                </a>
+                <a href="{{ url_for('public.week_view') }}" 
+                   class="text-gray-700 hover:text-thai-turquoise transition font-medium">
+                    {{ t('week') }}
+                </a>
+                <a href="{{ url_for('public.month_view') }}" 
+                   class="text-gray-700 hover:text-thai-turquoise transition font-medium">
+                    {{ t('month') }}
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-100 mt-12">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-600">
+                <p>&copy; 2025 {{ t('site_title') }}</p>
+                <p class="mt-2 text-sm">Entwickelt von Ralle1976</p>
+            </div>
+        </div>
+    </footer>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

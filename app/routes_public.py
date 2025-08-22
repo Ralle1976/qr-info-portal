@@ -77,7 +77,8 @@ def week_view():
     return render_template('week.html',
         week_schedule=week_schedule,
         week_offset=week_offset,
-        status=status
+        status=status,
+        today=datetime.now(ScheduleService.TIMEZONE).date()
     )
 
 @public_bp.route('/month')
@@ -108,7 +109,8 @@ def month_view():
         prev_month=prev_month,
         next_year=next_year,
         next_month=next_month,
-        status=status
+        status=status,
+        today=datetime.now(ScheduleService.TIMEZONE).date()
     )
 
 @public_bp.route('/set-language/<language>')
