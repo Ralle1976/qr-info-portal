@@ -1,0 +1,48 @@
+site:
+  name: "Labor Pattaya – Blutabnahme"
+  languages: ["de", "th", "en"]
+  default_language: "de"
+  timezone: "Asia/Bangkok"
+
+location:
+  address: "Soi Buakhao, Pattaya"
+  latitude: 12.923556
+  longitude: 100.882507
+  maps_link: "https://maps.google.com/?q=12.923556,100.882507"
+
+contact:
+  phone: "+66 38 123 456"
+  email: "labor@pattaya-medical.com"
+
+services:
+  standard: 
+    - "Blutabnahme"
+    - "Vorgespräch"
+    - "Nachgespräch"
+
+status:
+  current:
+    type: "ANWESEND"
+    from: null
+    to: null
+    note: null
+
+hours:
+  weekly:
+    mon: ["08:30-12:00", "13:00-16:00"]
+    tue: ["08:30-12:00", "13:00-16:00"]
+    wed: ["08:30-12:00"]
+    thu: ["08:30-12:00", "13:00-16:00"]
+    fri: ["08:30-13:00"]
+    sat: []
+    sun: []
+  exceptions: []
+
+availability:
+  indicative_slots: []
+
+announcements: []
+
+admin:
+  username: "admin"
+  password_env: "ADMIN_PASSWORD"
